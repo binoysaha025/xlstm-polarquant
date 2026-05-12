@@ -1,0 +1,24 @@
+# MLflow
+mlruns/
+mlflow.db
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# System
+.DS_Store
+
+# Weights
+weights/
+*.pt
+*.pth
+
+# Data
+*.csv
+*.parquet
+
+# Env
+.env
