@@ -5,14 +5,14 @@ from models.mlstm import mLSTMCell
 from models.mlstm_polarquant import mLSTMCellPolarQuant
 
 class XLSTMBlock(nn.Module):
-    def __init__(self, input_size, hidden_size, use_polarquant=False, n_bits=8):
+    def __init__(self, input_size, hidden_size, use_polarquant=False, n_bits=8, k=8):
         super().__init__()
         self.hidden_size = hidden_size
 
         self.slstm = sLSTMCell(input_size, hidden_size)
 
         if use_polarquant:
-            self.mlstm = mLSTMCellPolarQuant(hidden_size, hidden_size, n_bits=n_bits)
+            self.mlstm = mLSTMCellPolarQuant(hidden_size, hidden_size, n_bits=n_bits, k=k)
         else:
             self.mlstm = mLSTMCell(hidden_size, hidden_size)
 
@@ -49,7 +49,7 @@ class XLSTMBlock(nn.Module):
     
 class xLSTM(nn.Module):
     "Full xLSTM model with xLSTM blocks + output headers"
-    def __init__(self, input_size, hidden_size, num_layers=2, output_size=1, use_polarquant=False, n_bits=8):
+    def __init__(self, input_size, hidden_size, num_layers=2, output_size=1, use_polarquant=False, n_bits=8, k=8):
         super().__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers
@@ -60,7 +60,8 @@ class xLSTM(nn.Module):
                 input_size if i == 0 else hidden_size, 
                 hidden_size,
                 use_polarquant=use_polarquant,
-                n_bits=n_bits
+                n_bits=n_bits,
+                k=k
             )
             for i in range(num_layers)
         ])

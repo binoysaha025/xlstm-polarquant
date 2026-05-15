@@ -41,7 +41,8 @@ def train():
                 input_size=INPUT_SIZE,
                 hidden_size=HIDDEN_SIZE,
                 num_layers=NUM_LAYERS,
-                use_polarquant=use_pq
+                use_polarquant=use_pq,
+                k=8
             ).to(device)
 
         optimizer = torch.optim.Adam(model.parameters(), lr=LR)
@@ -89,6 +90,10 @@ def train():
                 mlflow.log_metrics({'train_loss': train_loss, 'val_loss': val_loss}, step=epoch)
 
             mlflow.pytorch.log_model(model, run_name)
+            import os
+            os.makedirs('weights', exist_ok=True)
+            torch.save(model.state_dict(), f'weights/{run_name}.pt')
+            print(f"saved weights/{run_name}.pt")
             print(f"{run_name} done")
 
 if __name__ == '__main__':
